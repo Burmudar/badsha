@@ -66,19 +66,18 @@ unsigned char* toBlock(char* text) {
     return hexArray;
 }
 
-unsigned long* toIntBlock(unsigned char* block, int size) {
-    unsigned long* newBlock = (unsigned long *)malloc(sizeof(unsigned long) * (size / 4));
-    unsigned char* hexVal = (unsigned char *)malloc(sizeof(unsigned char) * 4);
+long* toIntBlock(unsigned char* block, int size) {
+    long* newBlock = (long *)malloc(sizeof(long) * (size / 4));
+    char* hexVal = (char *)malloc(sizeof(char) * 6);
     for (int i = 0; i < (size / 4); i++){
-        for (int j = 0; j < 4; j++) {
-            int index = i * 4 + j;
-            hexVal[j] = block[index];
-            printf("%02x",hexVal[j]);
-        }
-        printf("\n");
-        newBlock[i] = (unsigned long)strtoul((char*)hexVal, NULL, 16);
-        printf("%lx",strtol((char*)hexVal, NULL, 16));
-        printf("%s\n", strerror(errno));
+        int index = i * 4;
+        printf("Start index: %i\n",index);
+        memcpy(&hexVal[2], &block[index], 4);
+        hexVal[0]='0';
+        hexVal[1]='x';
+        printf("3 = %i\n",(int)strtol(hexVal, NULL, 16));
+        newBlock[i]=strtol((const char*)hexVal, NULL, 16);
+        printf("error: %s\n", strerror(errno));
     }
     return newBlock;
 }
@@ -119,7 +118,7 @@ unsigned int SSIG1(unsigned int* x) {
 
 int main(void)
 {
-    unsigned char *a = toBlock("William Bezuidenhout");
+    unsigned char *a = toBlock("abcde");
     for (int i = 0; i < BLOCK_SIZE_IN_HEX; i++) {
         printf("%02x", a[i]);
         if ((i + 1) % 4 == 0) {
@@ -130,10 +129,7 @@ int main(void)
         }
     }
     printf("\n");
-    unsigned long* intBlock = toIntBlock(a, BLOCK_SIZE_IN_HEX);
-    for(int i = 0; i < 16; i++) {
-        printf("%lx\n", intBlock[i]);
-    }
+    long* intBlock = toIntBlock(a, BLOCK_SIZE_IN_HEX);
     free(a);
     free(intBlock);
     return 0;
