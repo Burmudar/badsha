@@ -4,7 +4,12 @@
 #include <errno.h>
 
 int main() {
- const char* text = "61626364";
- printf("%lx\n", strtol(text, NULL, 16));
- printf("%lu", strtol(text, NULL, 16));
+ const char* text = "abcd";
+ int shift = 24;
+ int answ = 0;
+ for(int i = 0; i < strlen(text); i++) {
+    answ |= text[i] << shift;
+    shift -= 8;
+ }
+ printf("answ=%i\n", answ);
 }

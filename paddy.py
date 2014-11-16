@@ -53,7 +53,7 @@ def binary_32(num):
     return pad_to_size(bin(num)[2:], 32)
 
 def rotary_r_shift(num, shift):
-    return num[shift:] + num[0:shift]
+    return num[len(num) - shift: len(num)] + num[0:len(num) - shift]
 
 def xor(a,b):
     diff = lambda a,b : '0' if a == b else '1'
